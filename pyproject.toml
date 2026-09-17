@@ -1,0 +1,22 @@
+[tool.ruff]
+required-version = "==0.15.6"
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B", "BLE", "PLR2004"]
+
+[tool.ruff.lint.per-file-ignores]
+# Existing QR protocol arithmetic, mask formulas and tables are left intact to
+# avoid a speculative algorithm rewrite. New CLI settings have named constants.
+"qr_gen.py" = ["PLR2004"]
+# Literal expected values make boundary/error regression cases independently clear.
+"tests/*.py" = ["PLR2004"]
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+files = ["qr_gen.py", "tools", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["qrcode.*", "zxingcpp"]
+ignore_missing_imports = true

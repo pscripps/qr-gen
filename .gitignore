@@ -22,3 +22,11 @@ dist/
 *.swp
 .idea/
 .vscode/
+
+# Local secrets and check caches
+.env
+.env.*
+*.pem
+*.key
+.mypy_cache/
+.ruff_cache/
