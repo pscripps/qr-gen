@@ -11,8 +11,6 @@ ENV/
 
 # Generated QR output
 *.png
-# README interface preview is a maintained documentation asset.
-!docs/preview.png
 
 # Distribution / packaging
 build/
