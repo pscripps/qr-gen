@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'"
+    />
+    <title>QR generator</title>
+    <style>
+      /* STYLES */
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <h1 class="brand" aria-label="QR generator">
+          <span class="brand-mark" aria-hidden="true">↗</span>qr / gen
+        </h1>
+      </header>
+      <form id="form" novalidate>
+        <label for="url">Website address</label>
+        <div class="input-row">
+          <input
+            id="url"
+            type="text"
+            inputmode="url"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="example.com"
+            aria-describedby="error"
+          />
+          <button class="primary" type="submit">Transform</button>
+        </div>
+        <p id="error" class="error" role="alert" hidden></p>
+      </form>
+      <div class="workspace">
+        <section class="result" aria-label="QR preview and downloads">
+          <div class="stage" id="stage">
+            <div id="empty">QR preview</div>
+            <canvas
+              id="preview"
+              role="img"
+              aria-label="Your generated QR code"
+              hidden
+            ></canvas>
+          </div>
+          <div class="downloads">
+            <a id="png" class="download primary" aria-disabled="true"
+              >Download PNG <span aria-hidden="true">↓</span></a
+            >
+            <a id="svg" class="download secondary" aria-disabled="true"
+              >SVG <span aria-hidden="true">↓</span></a
+            >
+          </div>
+          <div class="result-meta">
+            <p id="payload" hidden></p>
+            <span id="image-size"></span>
+            <p id="status" role="status"></p>
+          </div>
+        </section>
+        <section class="appearance" aria-label="Appearance">
+          <fieldset>
+            <legend>Finish</legend>
+            <div id="presets" class="presets"></div>
+          </fieldset>
+          <div class="surface-controls">
+            <label for="surface">Preview background</label>
+            <select id="surface"></select>
+          </div>
+          <p class="test-reminder">
+            Test your code and color combination before sharing.
+          </p>
+        </section>
+      </div>
+      <noscript
+        ><p class="error">Enable JavaScript to generate QR codes.</p></noscript
+      >
+    </main>
+    <script>
+      /* ENCODER */
+    </script>
+    <script>
+      /* APP */
+    </script>
+  </body>
+</html>

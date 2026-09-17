@@ -1,0 +1,72 @@
+.stage {
+  aspect-ratio: 1;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  border-radius: 10px;
+  border: 1px solid #0000000d;
+}
+#empty {
+  color: #3f4b4b;
+  font-size: 14px;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+.downloads {
+  display: flex;
+  gap: 9px;
+  margin-top: 14px;
+}
+.download {
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.download:first-child {
+  flex: 1;
+}
+.secondary {
+  color: var(--ink);
+  border-color: #aeb8ad;
+  background: transparent;
+}
+.secondary:hover {
+  background: #ebeee6;
+}
+[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+.result-meta {
+  margin-top: 12px;
+}
+#payload {
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  max-height: 54px;
+  overflow-y: auto;
+  margin: 0 0 4px;
+  color: #3e4943;
+}
+#image-size,
+#status {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+#status {
+  margin: 6px 0 0;
+}
+.test-reminder {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 14px 0 0;
+  color: var(--muted);
+}

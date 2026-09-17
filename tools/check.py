@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SOURCE_LINE_LIMIT = 300
+# Preserve the existing, independently tested QR protocol implementation during
+# the HTML-only redesign. Freeze its current size; no other source is exempt.
+SOURCE_LINE_EXCEPTIONS = {"qr_gen.py": 644}
 SECRET_FILES = (".env", ".env.local", "private.pem", "private.key")
 
 
@@ -29,6 +33,16 @@ def verify_project_rules() -> None:
         cwd=ROOT,
         text=True,
     ).splitlines()
+    # The bundled HTML and upstream encoder are generated/vendor artifacts.
+    authored_extensions = {".py", ".ts", ".mjs", ".css", ".html"}
+    for name in files:
+        if name == "QR-generator.html" or name.startswith("vendor/"):
+            continue
+        if Path(name).suffix in authored_extensions:
+            if len((ROOT / name).read_text().splitlines()) > SOURCE_LINE_EXCEPTIONS.get(
+                name, SOURCE_LINE_LIMIT
+            ):
+                raise SystemExit(f"{name}: exceeds the 300-line source limit")
     for name in files:
         if not name.endswith(".py"):
             continue
@@ -55,7 +69,7 @@ def verify_project_rules() -> None:
             "scan",
             "--all-files",
             "--exclude-files",
-            r"(^|/)(\.git|\.venv|\.mypy_cache|\.ruff_cache|__pycache__)/",
+            r"(^|/)(\.git|\.venv|\.mypy_cache|\.ruff_cache|__pycache__|node_modules)/",
         ],
         cwd=ROOT,
         text=True,
@@ -70,6 +84,7 @@ def main() -> None:
     run(sys.executable, "-m", "ruff", "check", ".")
     run(sys.executable, "-m", "mypy")
     run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")
+    run("npm", "run", "check")
 
 
 if __name__ == "__main__":

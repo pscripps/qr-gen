@@ -11,6 +11,8 @@ ENV/
 
 # Generated QR output
 *.png
+# README interface preview is a maintained documentation asset.
+!docs/preview.png
 
 # Distribution / packaging
 build/
@@ -30,3 +32,4 @@ dist/
 *.key
 .mypy_cache/
 .ruff_cache/
+node_modules/

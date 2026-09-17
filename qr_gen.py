@@ -5,16 +5,15 @@ Outputs PNG via PIL.  No network or third-party QR libraries needed.
 """
 
 import argparse
-import io
 import sys
 from pathlib import Path
 
-from PIL import Image
+from qr_appearance import DEFAULT_PRESET, PRESETS, SETTINGS, png_bytes, write_svg
 
 DEFAULT_OUTPUT = "qrcode.png"
-DEFAULT_SCALE = 10
-QUIET_ZONE = 4
-MAX_INPUT_BYTES = 2953
+DEFAULT_SCALE = SETTINGS["scale"]
+QUIET_ZONE = SETTINGS["quietZone"]
+MAX_INPUT_BYTES = SETTINGS["maxBytes"]
 
 # ═══════════════════════════════════════════════════════════════════════════
 #  GF(256) arithmetic  (primitive poly 0x11d)
@@ -568,24 +567,12 @@ def render_png(
     filename=DEFAULT_OUTPUT,
     *,
     overwrite=False,
+    preset=DEFAULT_PRESET,
 ):
     img_size = (size + 2 * border) * scale
-    img = Image.new("RGB", (img_size, img_size), "white")
-    pixels = img.load()
-    if pixels is None:
-        raise ValueError("Could not initialize the PNG image.")
-    for r in range(size):
-        for c in range(size):
-            if matrix[r][c]:
-                for dy in range(scale):
-                    for dx in range(scale):
-                        py = (r + border) * scale + dy
-                        px = (c + border) * scale + dx
-                        pixels[px, py] = (0, 0, 0)
-    buffer = io.BytesIO()
-    img.save(buffer, format="PNG")
+    data = png_bytes(matrix, size, scale, border, PRESETS[preset])
     with Path(filename).open("wb" if overwrite else "xb") as output:
-        output.write(buffer.getvalue())
+        output.write(data)
     print(f"Saved: {filename} ({img_size}x{img_size} px)")
     return filename
 
@@ -599,16 +586,43 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "output",
         nargs="?",
-        default=DEFAULT_OUTPUT,
+        default=None,
         help=f"PNG output path (default: {DEFAULT_OUTPUT})",
     )
     parser.add_argument(
         "--force", action="store_true", help="replace an existing output file"
     )
+    parser.add_argument(
+        "--preset",
+        choices=PRESETS,
+        default=DEFAULT_PRESET,
+        help="appearance finish (default: classic)",
+    )
+    parser.add_argument(
+        "--format",
+        choices=("png", "svg"),
+        default="png",
+        help="image format (default: png; use an .svg filename for SVG)",
+    )
     args = parser.parse_args(argv)
+    if args.output is None:
+        args.output = "qrcode.svg" if args.format == "svg" else DEFAULT_OUTPUT
     try:
         matrix, size = generate_qr(args.data)
-        render_png(matrix, size, filename=args.output, overwrite=args.force)
+        if args.format == "svg":
+            write_svg(
+                matrix, size, args.output, preset=args.preset, overwrite=args.force
+            )
+        else:
+            render_png(
+                matrix,
+                size,
+                filename=args.output,
+                overwrite=args.force,
+                preset=args.preset,
+            )
+        if args.preset != DEFAULT_PRESET:
+            print(PRESETS[args.preset]["note"], file=sys.stderr)
     except FileExistsError:
         parser.exit(
             2,
