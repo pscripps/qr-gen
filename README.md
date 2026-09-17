@@ -14,7 +14,7 @@ It runs entirely on your computer. No internet connection is required after down
 
 [Download as ZIP](https://github.com/pscripps/qr-gen/releases/latest/download/qr-gen-html.zip) if you prefer; unzip it and open **QR-generator.html**.
 
-![QR generator with a website address field, QR preview, three finishes, and PNG/SVG downloads](docs/preview.png)
+<img src="docs/preview.png" width="900" alt="QR generator with a website address field, QR preview, three finishes, and PNG/SVG downloads">
 
 ## Set up the Python version
 
